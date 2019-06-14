@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.SimpleAdapter;
@@ -25,11 +28,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Teacher_Info extends AppCompatActivity {
+public class Teacher_Info extends Fragment {
     private String T_name;
     private TextView realname;
     private TextView username;//账号
     private GridView myCourse;//课程
+    private View view;
 
     String name;
     String pass;
@@ -39,15 +43,23 @@ public class Teacher_Info extends AppCompatActivity {
 
     String url;
     GestureDetector gesture;
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.look_info);
+        view = LayoutInflater.from(this.getActivity()).inflate(R.layout.look_info,container,false);
+        //Log.i("Teacher_Lookinfo", view==null?"NULL":"Not NULL");
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         //初始化控件
         init();
-        setgesture();
+        //setgesture();
         setInfo();
     }
-    private void setgesture() {
+    /*private void setgesture() {
         gesture = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             public boolean onFling(MotionEvent e1, MotionEvent e2, float X, float Y) {
                 if (Math.abs(e2.getY() - e1.getY()) > 100) {
@@ -72,19 +84,19 @@ public class Teacher_Info extends AppCompatActivity {
     public boolean onTouchEvent(MotionEvent event) {
         gesture.onTouchEvent(event);
         return super.onTouchEvent(event);
-    }
+    }*/
     private void init() {
         //设置全屏幕，即系统可见ui，且actionbar设置为透明
-        View decorView = getWindow().getDecorView();
+        realname = getView().findViewById(R.id.realname);
+        username = getView().findViewById(R.id.username);
+        myCourse = getView().findViewById(R.id.myclasses);
+
+        View decorView = getActivity().getWindow().getDecorView();
         int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
         decorView.setSystemUiVisibility(option);
         if(Build.VERSION.SDK_INT >= 21){
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
+            getActivity().getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
-
-        realname = findViewById(R.id.realname);
-        username = findViewById(R.id.username);
-        myCourse = findViewById(R.id.myclasses);
     }
 
     private void setInfo() {
@@ -127,10 +139,10 @@ public class Teacher_Info extends AppCompatActivity {
     }
 
     private void getinfo() {
-        Intent intent = getIntent();
-         name = intent.getStringExtra("name");
-         pass = intent.getStringExtra("pass");
-         info=  intent.getStringExtra("info");
+        Bundle bundle = getArguments();
+        name = bundle.getString("name");
+        pass = bundle.getString("pass");
+        info=  bundle.getString("info");
 
         if(info!=null){
             String str[]=info.split(",");
@@ -159,7 +171,7 @@ public class Teacher_Info extends AppCompatActivity {
             map.put("name", names[i]);
             data.add(map);
         }
-        SimpleAdapter simpleAdapter = new SimpleAdapter(this, data, R.layout.course_item, new String[]{"name"},
+        SimpleAdapter simpleAdapter = new SimpleAdapter(getActivity(), data, R.layout.course_item, new String[]{"name"},
                 new int[]{R.id.textView}
         );
         myCourse.setAdapter(simpleAdapter);
@@ -182,7 +194,7 @@ public class Teacher_Info extends AppCompatActivity {
         });
     }
     private void toDetailedrecord(String course) {
-        Intent intent = new Intent(this, Recorddetailed.class);
+        Intent intent = new Intent(getActivity(), Recorddetailed.class);
         intent.putExtra("course", course);
         startActivity(intent);
     }

@@ -23,6 +23,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
+
         android:theme="@style/AppTheme">
         <activity android:name="com.example.yi.myproject.MyProject">
             <intent-filter>
@@ -45,6 +46,7 @@
         <activity android:name="com.example.yi.myproject.ExitApplication"/>
         <activity android:name="Teacher.allrecord" android:theme="@style/MyDialogStyleBottom"/>
         <activity android:name="Student.Record"/>
+        <activity android:name="Teacher.TeaActivity"/>
     </application>
 
 </manifest>

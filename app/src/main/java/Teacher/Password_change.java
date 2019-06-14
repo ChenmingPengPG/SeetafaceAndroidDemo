@@ -7,10 +7,13 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -21,7 +24,12 @@ import com.example.facedemo.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Password_change extends AppCompatActivity {
+import java.util.zip.Inflater;
+
+import static android.content.Context.MODE_PRIVATE;
+
+public class Password_change extends Fragment {
+    View view;
     EditText oldpassText, newpassText, confirmpassText;
     Button confirm;
     String oldpass, newpass, confirmpass;
@@ -33,16 +41,22 @@ public class Password_change extends AppCompatActivity {
     SharedPreferences.Editor editor;
     int State = 0;
     GestureDetector gesture;
-
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.change_password);
-        setgesture();
+        view = LayoutInflater.from(this.getActivity()).inflate(R.layout.change_password,container,false);
+
+        return view;
+    }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        //setgesture();
         init();
         setButton();
     }
 
-    private void setgesture() {
+    /*private void setgesture() {
         gesture = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             public boolean onFling(MotionEvent e1, MotionEvent e2, float X, float Y) {
                 if (Math.abs(e2.getY() - e1.getY()) > 100) {
@@ -67,21 +81,21 @@ public class Password_change extends AppCompatActivity {
     public boolean onTouchEvent(MotionEvent event) {
         gesture.onTouchEvent(event);
         return super.onTouchEvent(event);
-    }
+    }*/
 
     private void init() {
         //设置全屏幕，即系统可见ui，且actionbar设置为透明
-        View decorView = getWindow().getDecorView();
+        View decorView = getActivity().getWindow().getDecorView();
         int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
         decorView.setSystemUiVisibility(option);
         if(Build.VERSION.SDK_INT >= 21){
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
+            getActivity().getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
 
-        oldpassText = findViewById(R.id.write_oldpassword);
-        newpassText = findViewById(R.id.write_newpassword);
-        confirmpassText = findViewById(R.id.confirnewpsd);
-        confirm = findViewById(R.id.buttonConfirmChange);
+        oldpassText = getView().findViewById(R.id.write_oldpassword);
+        newpassText = getView().findViewById(R.id.write_newpassword);
+        confirmpassText = getView().findViewById(R.id.confirnewpsd);
+        confirm = getView().findViewById(R.id.buttonConfirmChange);
     }
 
     private void setButton() {
@@ -90,15 +104,15 @@ public class Password_change extends AppCompatActivity {
             public void onClick(View v) {
                 gettext();
                 if (!pass.equals(oldpass)) {
-                    Toast.makeText(Password_change.this, "旧密码错误", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "旧密码错误", Toast.LENGTH_SHORT).show();
                     oldpassText.setError("错误");
                     oldpassText.requestFocus();
                 } else if (("").equals(newpass)) {
-                    Toast.makeText(Password_change.this, "新密码不能为空", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "新密码不能为空", Toast.LENGTH_SHORT).show();
                     newpassText.setError("错误");
                     newpassText.requestFocus();
                 } else if (!newpass.equals(confirmpass)) {
-                    Toast.makeText(Password_change.this, "两次密码不一致", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "两次密码不一致", Toast.LENGTH_SHORT).show();
                 } else {
                     //连接服务器修改密码
                     new link().start();
@@ -112,9 +126,9 @@ public class Password_change extends AppCompatActivity {
         newpass = newpassText.getText().toString();
         confirmpass = confirmpassText.getText().toString();
 
-        Intent intent = getIntent();
-        pass = intent.getStringExtra("pass");
-        name = intent.getStringExtra("name");
+        Bundle bundle = getArguments();
+        pass = bundle.getString("pass");
+        name = bundle.getString("name");
     }
 
     class link extends Thread {
@@ -134,12 +148,12 @@ public class Password_change extends AppCompatActivity {
             String str = UserService.posttoServerforResult(url,data);
             if (null != str) {
                 Looper.prepare();
-                Toast.makeText(Password_change.this, "修改成功,请重新登录", 1).show();
+                Toast.makeText(getContext(), "修改成功,请重新登录", 1).show();
                 back_main();
                 Looper.loop();
             } else {
                 Looper.prepare();
-                Toast.makeText(Password_change.this, "服务器连接失败", 1).show();
+                Toast.makeText(getContext(), "服务器连接失败", 1).show();
                 Looper.loop();
             }
 
@@ -148,7 +162,7 @@ public class Password_change extends AppCompatActivity {
     }
 
     private void back_main() {
-        Intent intent = new Intent(this, MyProject.class);
+        Intent intent = new Intent(getActivity(), MyProject.class);
         //点击退出登录时，设置State为0并保存
         State = 0;
         saveInfo(State);
@@ -156,7 +170,7 @@ public class Password_change extends AppCompatActivity {
     }
 
     private void saveInfo(int state) {
-        sp = getSharedPreferences("data", MODE_PRIVATE);//data为保存的SharedPreferences文件名
+        sp = getActivity().getSharedPreferences("data", MODE_PRIVATE);//data为保存的SharedPreferences文件名
         editor = sp.edit();
         editor.putInt("State", state);
         editor.putString("password", "");

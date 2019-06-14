@@ -20,11 +20,14 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +54,8 @@ import seetaface.SeetaFace;
 import static android.view.View.inflate;
 
 
-public class CheckinPage extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class CheckinPage extends Fragment implements AdapterView.OnItemSelectedListener{
+    View view;
     Button start, chooseimg;
     CMSeetaFace[] face;
     ArrayList<CMSeetaFace> allface=new ArrayList<>();
@@ -89,30 +93,36 @@ public class CheckinPage extends AppCompatActivity implements AdapterView.OnItem
     //请求状态码
     private static int REQUEST_PERMISSION_CODE = 1;
 
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.checkin_page);
+        view = LayoutInflater.from(this.getActivity()).inflate(R.layout.checkin_page,container,false);
         //动态申请读写权限
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, REQUEST_PERMISSION_CODE);
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
             }
         }
         //申请相机权限
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
 
         } else {
             //否则去请求相机权限
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 100);
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
 
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
         }
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         staticLoadCVLibraries();
         //设置滑动的监听
-        setgesture();
+        //setgesture();
         //把从服务器传回的课程写到下拉框上
         setCourse();
         //初始化下拉框
@@ -131,7 +141,7 @@ public class CheckinPage extends AppCompatActivity implements AdapterView.OnItem
         }
     }
 
-    private void setgesture() {
+    /*private void setgesture() {
         gesture = new GestureDetector(this, new GestureDetector.SimpleOnGestureListener() {
             public boolean onFling(MotionEvent e1, MotionEvent e2, float X, float Y) {
                 if (Math.abs(e2.getY() - e1.getY()) > 100) {
@@ -154,26 +164,29 @@ public class CheckinPage extends AppCompatActivity implements AdapterView.OnItem
     public boolean onTouchEvent(MotionEvent event) {
         gesture.onTouchEvent(event);
         return super.onTouchEvent(event);
-    }
+    }*/
 
     private void setCourse() {
-        Intent intent = getIntent();
+        //Intent intent = getActivity().getIntent();
         arr = new String[]{""};
-        course = intent.getStringExtra("course");
-        if (!("").equals(course)) {
-            String[] str = course.split(";");
-            //将下拉框的个数与课程数量保持一致
-            arr = new String[str.length];
-            for (int i = 0; i < str.length; i++) {
-                arr[i] = str[i];
+        //course = intent.getStringExtra("course");
+        Bundle bundle = getArguments();
+        if(bundle != null){
+            course = bundle.getString("Courses");
+            if (!("").equals(course)) {
+                String[] str = course.split(";");
+                //将下拉框的个数与课程数量保持一致
+                arr = new String[str.length];
+                for (int i = 0; i < str.length; i++) {
+                    arr[i] = str[i];
+                }
             }
         }
-
     }
 
     //下拉框的初始化
     private void initspinner() {
-        myAdapter = new ArrayAdapter<String>(this, R.layout.check_textview, arr) {
+        myAdapter = new ArrayAdapter<String>(getContext(), R.layout.check_textview, arr) {
             @Override
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
                 View view = inflate(getContext(), R.layout.list_item, null);
@@ -189,13 +202,21 @@ public class CheckinPage extends AppCompatActivity implements AdapterView.OnItem
 
     private void initData() {
         handler = new Handler();
-        getresult = findViewById(R.id.getresult);
-        start = findViewById(R.id.startCheckIn);
-        chooseimg = findViewById(R.id.choosePicture);
-        image = findViewById(R.id.imageView);
-        sp = findViewById(R.id.chooseClass);
-        pb = findViewById(R.id.progressBar);
+        getresult = getView().findViewById(R.id.getresult);
+        start = getView().findViewById(R.id.startCheckIn);
+        chooseimg = getView().findViewById(R.id.choosePicture);
+        image = getView().findViewById(R.id.imageView);
+        sp = getView().findViewById(R.id.chooseClass);
+        pb = getView().findViewById(R.id.progressBar);
         sp.setAdapter(myAdapter);
+
+        /*//沉浸式layout
+        View decorView = getActivity().getWindow().getDecorView();
+        int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+        decorView.setSystemUiVisibility(option);
+        if(Build.VERSION.SDK_INT >= 21){
+            getActivity().getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }*/
     }
 
     private void setButton() {
@@ -233,7 +254,7 @@ public class CheckinPage extends AppCompatActivity implements AdapterView.OnItem
             public void onClick(View v) {
                 if ("".equals(courseName)) {
                     pb.setVisibility(View.INVISIBLE);
-                    Toast.makeText(CheckinPage.this, "您未选择课程", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "您未选择课程", Toast.LENGTH_SHORT).show();
                 } else if (bitmap != null) {
                     pb.setVisibility(View.VISIBLE);
                     mDetecteSeeta = new DetecteSeeta();
@@ -274,10 +295,10 @@ public class CheckinPage extends AppCompatActivity implements AdapterView.OnItem
                         new compare().start();
                     } else {
                         handler.post(runnable2);
-                        Toast.makeText(CheckinPage.this, "选择的图片中未检测到人脸", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "选择的图片中未检测到人脸", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(CheckinPage.this, "请选择图片", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "请选择图片", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -317,7 +338,7 @@ public class CheckinPage extends AppCompatActivity implements AdapterView.OnItem
 
 
     private void getresult() {
-        Intent intent = new Intent(this, Check_result.class);
+        Intent intent = new Intent(getActivity(), Check_result.class);
         intent.putExtra("totalnum", totalnum);
         intent.putExtra("realnum", realnum);
         intent.putExtra("nocome", nocome);
@@ -353,7 +374,7 @@ public class CheckinPage extends AppCompatActivity implements AdapterView.OnItem
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 1) {
                 /** * 当选择的图片不为空的话，在获取到图片的途径 */
@@ -361,9 +382,9 @@ public class CheckinPage extends AppCompatActivity implements AdapterView.OnItem
                 Log.e("tag", "uri = " + uri);
                 try {
                     String[] pojo = {MediaStore.Images.Media.DATA};
-                    Cursor cursor = managedQuery(uri, pojo, null, null, null);
+                    Cursor cursor = getActivity().managedQuery(uri, pojo, null, null, null);
                     if (cursor != null) {
-                        ContentResolver cr = this.getContentResolver();
+                        ContentResolver cr = this.getActivity().getContentResolver();
                         int colunm_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                         cursor.moveToFirst();
                         String path = cursor.getString(colunm_index);
@@ -421,7 +442,7 @@ public class CheckinPage extends AppCompatActivity implements AdapterView.OnItem
     }
 
     private void alert() {
-        Dialog dialog = new AlertDialog.Builder(this).setTitle("提示")
+        Dialog dialog = new AlertDialog.Builder(getContext()).setTitle("提示")
                 .setMessage("您选择的不是有效的图片")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -430,6 +451,8 @@ public class CheckinPage extends AppCompatActivity implements AdapterView.OnItem
                 }).create();
         dialog.show();
     }
+
+
 
     class compare extends Thread {
         @Override
@@ -499,7 +522,7 @@ public class CheckinPage extends AppCompatActivity implements AdapterView.OnItem
 
     private void showListDialog() {
         final String[] items = {"拍照", "从相册选择"};
-        AlertDialog.Builder listDialog = new AlertDialog.Builder(CheckinPage.this);
+        AlertDialog.Builder listDialog = new AlertDialog.Builder(this.getActivity());
         listDialog.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -519,7 +542,7 @@ public class CheckinPage extends AppCompatActivity implements AdapterView.OnItem
     }
     private void showListlongClickDialog(){
         final String[] items = {"移除"};
-        AlertDialog.Builder listDialog = new AlertDialog.Builder(CheckinPage.this);
+        AlertDialog.Builder listDialog = new AlertDialog.Builder(this.getActivity());
         listDialog.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -580,5 +603,7 @@ public class CheckinPage extends AppCompatActivity implements AdapterView.OnItem
             getresult.setVisibility(View.INVISIBLE);
         }
     };
+
+
 
 }

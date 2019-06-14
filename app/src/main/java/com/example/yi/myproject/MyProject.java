@@ -43,7 +43,7 @@ import org.json.JSONObject;
 import java.io.File;
 
 import Student.Student;
-import Teacher.Teacher;
+import Teacher.TeaActivity;
 public class MyProject extends AppCompatActivity {
     ImageView Image;
     EditText NameText, PasswordText;
@@ -257,7 +257,7 @@ public class MyProject extends AppCompatActivity {
 
     //进入老师操作的界面
     private void startTeacher() {
-        Intent intent = new Intent(this, Teacher.class);
+        Intent intent = new Intent(this, TeaActivity.class);
         intent.putExtra("name", name);
         intent.putExtra("pass", pass);
         startActivity(intent);
@@ -316,6 +316,7 @@ public class MyProject extends AppCompatActivity {
                     saveInfo(name, pass);
                     //进入老师操作的界面
                     startTeacher();
+                    Log.i("Tags", name+pass);
                 }
             }
             super.run();
