@@ -9,27 +9,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.os.TransactionTooLargeException;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.facedemo.R;
@@ -62,14 +55,14 @@ public class TeaActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_drawer);
+        setContentView(R.layout.tea_drawer);
 
         init();
-        getNameandPass();
         initialFragmentCheckInfo();
     }
 
     private void init(){
+        getNameandPass();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +75,17 @@ public class TeaActivity extends AppCompatActivity
         });
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View nav_header =  navigationView.getHeaderView(0);
+        ImageView img = nav_header.findViewById(R.id.imageView);
+        Log.i("TeaActivity",img==null?"NULL":"NOT NULL");
+        img.setImageResource(R.drawable.teacher);
+        TextView above = (TextView)nav_header.findViewById(R.id.above);
+        TextView below = (TextView)nav_header.findViewById(R.id.below);
+        above.setText("账号");
+        below.setText(name);
+
+        drawer.openDrawer(Gravity.START);
+
         //沉浸式layout
         View decorView = getWindow().getDecorView();
         int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;

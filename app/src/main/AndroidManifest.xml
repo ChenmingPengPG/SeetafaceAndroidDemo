@@ -47,6 +47,7 @@
         <activity android:name="Teacher.allrecord" android:theme="@style/MyDialogStyleBottom"/>
         <activity android:name="Student.Record"/>
         <activity android:name="Teacher.TeaActivity"/>
+        <activity android:name="Student.StuActivity" />
     </application>
 
 </manifest>

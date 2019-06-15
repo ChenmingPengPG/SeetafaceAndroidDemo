@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
     android:background="@drawable/side_nav_bar"
@@ -14,23 +15,50 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+
         android:contentDescription="@string/nav_header_desc"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
         app:srcCompat="@mipmap/ic_launcher_round" />
 
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/above"
+        app:layout_constraintLeft_toRightOf="@id/imageView"
+        app:layout_constraintTop_toTopOf="@id/imageView"
+
+        android:layout_marginTop="0dp"
+        android:layout_marginStart="30dp"
+
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
+
+        android:fontFamily="@font/test"
         android:text="@string/nav_header_title"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:textSize="20sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        />
+
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/below"
+        app:layout_constraintLeft_toLeftOf="@id/above"
+        app:layout_constraintBottom_toBottomOf="@id/imageView"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/nav_header_subtitle" />
 
-</LinearLayout>
+        android:layout_marginTop="20dp"
+
+        android:fontFamily="@font/test"
+        android:textSize="20sp"
+        android:text="@string/nav_header_subtitle"
+         />
+
+</android.support.constraint.ConstraintLayout>
