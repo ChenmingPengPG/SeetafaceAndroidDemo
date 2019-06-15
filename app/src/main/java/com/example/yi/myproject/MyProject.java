@@ -42,7 +42,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 
-import Student.Student;
+import Student.StuActivity;
 import Teacher.TeaActivity;
 public class MyProject extends AppCompatActivity {
     ImageView Image;
@@ -266,7 +266,7 @@ public class MyProject extends AppCompatActivity {
 
     //进入学生操作的界面
     private void startStudent() {
-        Intent intent = new Intent(this, Student.class);
+        Intent intent = new Intent(this, StuActivity.class);
         intent.putExtra("name", name);
         intent.putExtra("pass", pass);
         startActivity(intent);

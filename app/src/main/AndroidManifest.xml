@@ -40,7 +40,7 @@
         <activity android:name="Teacher.Teacher_Info" />
         <activity android:name="Teacher.Password_change" />
         <activity android:name="Teacher.Check_result" />
-        <activity android:name="Student.uploadImage" />
+        <activity android:name="Student.UploadImage" />
         <activity android:name="Teacher.courseRecord" />
         <activity android:name="Teacher.Recorddetailed" />
         <activity android:name="com.example.yi.myproject.ExitApplication"/>

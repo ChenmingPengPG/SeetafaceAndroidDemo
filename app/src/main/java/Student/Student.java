@@ -126,7 +126,7 @@ public class Student extends AppCompatActivity {
         editor.commit();
     }
     private void uploadImage(){
-        Intent intent=new Intent(this, uploadImage.class);
+        Intent intent=new Intent(this, UploadImage.class);
         intent.putExtra("Sid",name);
         startActivity(intent);
     }

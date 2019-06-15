@@ -20,10 +20,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -42,11 +46,9 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import Teacher.CheckinPage;
 import seetaface.CMSeetaFace;
-import seetaface.SeetaFace;
 
-public class uploadImage extends AppCompatActivity {
+public class UploadImage extends Fragment {
     Button select, upload;
     String picPath = null;
     String Sid;
@@ -55,6 +57,7 @@ public class uploadImage extends AppCompatActivity {
     File file;
     ProgressBar pb;
     Handler handler;
+    View view;
     private static String requestURL = "http://47.102.205.118:8080/SeetaFaceJavaDemo/getImageServlet?";
     // private String requestURL = new basicInfo().getUploadImgUrl();
 
@@ -66,16 +69,23 @@ public class uploadImage extends AppCompatActivity {
     //请求状态码
     private static int REQUEST_PERMISSION_CODE = 1;
 
-    protected void onCreate(Bundle savedInstanceState) {
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.avtivity_uploadimage);
+        view = LayoutInflater.from(this.getActivity()).inflate(R.layout.avtivity_uploadimage,container,false);
         //动态申请读写权限
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, REQUEST_PERMISSION_CODE);
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), PERMISSIONS_STORAGE, REQUEST_PERMISSION_CODE);
             }
         }
+        return view;
+    }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         init();
         setbutton();
     }
@@ -91,21 +101,14 @@ public class uploadImage extends AppCompatActivity {
     }
 
     private void init() {
-        //设置全屏幕，即系统可见ui，且actionbar设置为透明
-        View decorView = getWindow().getDecorView();
-        int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-        decorView.setSystemUiVisibility(option);
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }
 
         handler = new Handler();
-        select = findViewById(R.id.select);
-        upload = findViewById(R.id.upload);
-        image = findViewById(R.id.image);
-        pb = findViewById(R.id.progressBar);
-        Intent intent = getIntent();
-        Sid = intent.getStringExtra("Sid");
+        select = getView().findViewById(R.id.select);
+        upload = getView().findViewById(R.id.upload);
+        image = getView().findViewById(R.id.image);
+        pb = getView().findViewById(R.id.progressBar);
+        Bundle bundle = getArguments();
+        Sid = bundle.getString("Sid");
     }
 
     private void setbutton() {
@@ -139,16 +142,16 @@ public class uploadImage extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             /** * 当选择的图片不为空的话，在获取到图片的途径 */
             Uri uri = data.getData();
             Log.e("tag", "uri = " + uri);
             try {
                 String[] pojo = {MediaStore.Images.Media.DATA};
-                Cursor cursor = managedQuery(uri, pojo, null, null, null);
+                Cursor cursor = getActivity().managedQuery(uri, pojo, null, null, null);
                 if (cursor != null) {
-                    ContentResolver cr = this.getContentResolver();
+                    ContentResolver cr = getActivity().getContentResolver();
                     int colunm_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                     cursor.moveToFirst();
                     String path = cursor.getString(colunm_index);
@@ -174,7 +177,7 @@ public class uploadImage extends AppCompatActivity {
     }
 
     private void alert() {
-        Dialog dialog = new AlertDialog.Builder(this).setTitle("提示")
+        Dialog dialog = new AlertDialog.Builder(getContext()).setTitle("提示")
                 .setMessage("您选择的不是有效的图片")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -190,14 +193,14 @@ public class uploadImage extends AppCompatActivity {
         public void run() {
             if (picPath == null) {
                 Looper.prepare();
-                Toast.makeText(uploadImage.this, "请选择图片", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "请选择图片", Toast.LENGTH_SHORT).show();
                 Looper.loop();
             } else if (Sid != null && picPath != null) {
                 DetecteSeeta mDetecteSeeta = new DetecteSeeta();
                 CMSeetaFace face[] =  mDetecteSeeta.DetectionFace(bt);
                 if (face == null) {
                     Looper.prepare();
-                    Toast.makeText(uploadImage.this, "所选图片中未检测到人脸", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "所选图片中未检测到人脸", Toast.LENGTH_SHORT).show();
                 } else {
                     //获取上传图片的特征
                     float feature[] = face[0].features;
@@ -231,12 +234,12 @@ public class uploadImage extends AppCompatActivity {
                         Log.i("answer", "feature");
                         handler.post(runnable1);
                         Looper.prepare();
-                        Toast.makeText(uploadImage.this, "上传图片成功", Toast.LENGTH_SHORT).show();
-                        finish();
+                        Toast.makeText(getContext(), "上传图片成功", Toast.LENGTH_SHORT).show();
+                        //finish();
                         Looper.loop();
                     } else {
                         Looper.prepare();
-                        Toast.makeText(uploadImage.this, "上传失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "上传失败", Toast.LENGTH_SHORT).show();
                     }
                 }
 

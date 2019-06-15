@@ -21,6 +21,6 @@
         android:fitsSystemWindows="true"
         app:itemTextAppearance="@style/Style_TextView"
         app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/activity_main_drawer" />
+        app:menu="@menu/stu_main_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

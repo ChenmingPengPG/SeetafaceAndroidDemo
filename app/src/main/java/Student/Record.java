@@ -9,10 +9,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -27,7 +30,8 @@ import com.example.facedemo.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Record extends AppCompatActivity {
+public class Record extends Fragment {
+    View view;
     GridView gridView;
     TextView title;
     private TableLayout tableLayout, tableTitle;
@@ -39,27 +43,30 @@ public class Record extends AppCompatActivity {
     Button all;
     private final int WC = ViewGroup.LayoutParams.WRAP_CONTENT;
     private final int MP = ViewGroup.LayoutParams.MATCH_PARENT;
-    public void onCreate(Bundle savedInstanceState) {
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.record_detailed);
+        view = LayoutInflater.from(this.getActivity()).inflate(R.layout.record_detailed,container,false);
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        //初始化
         init();
         new link().start();
     }
 
-    public void init(){
-        //设置全屏幕，即系统可见ui，且actionbar设置为透明
-        View decorView = getWindow().getDecorView();
-        int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-        decorView.setSystemUiVisibility(option);
-        if(Build.VERSION.SDK_INT >= 21){
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }
 
+    public void init(){
         handler=new Handler();
-        Intent intent = getIntent();
-        Sid = intent.getStringExtra("Sid");
-        title = findViewById(R.id.course);
-        all=findViewById(R.id.all);
+        Bundle bundle = getArguments();
+        Sid = bundle.getString("Sid");
+        title = getView().findViewById(R.id.course);
+        all = getView().findViewById(R.id.all);
         all.setVisibility(View.INVISIBLE);
     }
     class link extends Thread {
@@ -85,7 +92,7 @@ public class Record extends AppCompatActivity {
             if (null != str) {
                 if ("".equals(str)) {
                     Looper.prepare();
-                    Toast.makeText(Record.this, "没有查询到记录", 1).show();
+                    Toast.makeText(getContext(), "没有查询到记录", 1).show();
                     Looper.loop();
                 } else {
                     Log.i("aaa", str);
@@ -97,7 +104,7 @@ public class Record extends AppCompatActivity {
 
             } else {
                 Looper.prepare();
-                Toast.makeText(Record.this, "服务器连接失败", 1).show();
+                Toast.makeText(getContext(), "服务器连接失败", 1).show();
                 Looper.loop();
 
             }
@@ -113,8 +120,8 @@ public class Record extends AppCompatActivity {
     private void createtable(String s[]) {
 
         //获取控件tableLayout
-        tableLayout = (TableLayout) findViewById(R.id.table1);
-        tableTitle = findViewById(R.id.table);
+        tableLayout = (TableLayout) getView().findViewById(R.id.table1);
+        tableTitle = getView().findViewById(R.id.table);
         //清除表格所有行
         tableLayout.removeAllViews();
         tableTitle.removeAllViews();
@@ -123,9 +130,9 @@ public class Record extends AppCompatActivity {
         tableTitle.setStretchAllColumns(true);
         //生成X行，Y列的表格
         //生成表头，不随scrollrow滑动
-        tableRow = new TableRow(Record.this);
+        tableRow = new TableRow(getContext());
         for (int j = 1; j <= col; j++) {
-            TextView tv = new TextView(Record.this);
+            TextView tv = new TextView(getContext());
             tv.setTextSize(20);
             tv.setGravity(Gravity.CENTER);
             switch (j) {
@@ -143,17 +150,17 @@ public class Record extends AppCompatActivity {
 
         //内容随scrollrow滑动
         for (int i = 1; i <= row; i++) {
-            tableRow = new TableRow(Record.this);
+            tableRow = new TableRow(getContext());
             String str[] = s[i - 1].split(";");
             for (int j = 1; j <= col; j++) {
-                    TextView tv = new TextView(Record.this);
+                    TextView tv = new TextView(getContext());
                     tv.setTextSize(20);
-                    Resources resources = getBaseContext().getResources();
+                    Resources resources = getActivity().getBaseContext().getResources();
                     tv.setTextColor(Color.parseColor("#336633"));//深绿色
                     tv.setGravity(Gravity.CENTER);
                     tv.setText(str[j - 1]);
                     //1 在res/font下寻找字体文件
-                    Typeface typeface = ResourcesCompat.getFont(this, R.font.test);
+                    Typeface typeface = ResourcesCompat.getFont(getContext(), R.font.test);
                     //2 在assets下寻找字体文件
                     //Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/helvetica.ttf");
                     tv.setTypeface(typeface);

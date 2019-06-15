@@ -10,7 +10,8 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,7 +22,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.facedemo.R;
 
@@ -32,9 +32,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-;import Teacher.Recorddetailed;
+;
 
-public class Student_Info extends AppCompatActivity {
+public class Student_Info extends Fragment {
+    View view;
     TextView number, name; //学号和姓名，认为学号即用户名
     ImageView image;
     ListView listView;
@@ -55,9 +56,17 @@ public class Student_Info extends AppCompatActivity {
     private static final int TIME_OUT = 10 * 1000; // 超时时间
     private static final String CHARSET = "utf-8"; // 设置编码
 
-    protected void onCreate(Bundle savedInstanceState) {
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.student_info);
+        view = LayoutInflater.from(this.getActivity()).inflate(R.layout.student_info,container,false);
+        return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         //初始化
         init();
         //设置基本信息
@@ -66,6 +75,8 @@ public class Student_Info extends AppCompatActivity {
         //设置listview
         //setlistview();
     }
+
+
 
     private void setbutton() {
         image.setOnClickListener(new View.OnClickListener() {
@@ -103,34 +114,28 @@ public class Student_Info extends AppCompatActivity {
     }
 
     public void toupload(){
-        Intent intent=new Intent(this,uploadImage.class);
+        Intent intent=new Intent(getActivity(), UploadImage.class);
         intent.putExtra("Sid",userName);
         startActivity(intent);
     }
 
 
     private void init() {
-        //设置全屏幕，即系统可见ui，且actionbar设置为透明
-        View decorView = getWindow().getDecorView();
-        int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-        decorView.setSystemUiVisibility(option);
-        if(Build.VERSION.SDK_INT >= 21){
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }
 
         handler = new Handler();
-        number = findViewById(R.id.num);
-        name = findViewById(R.id.name);
-        image = findViewById(R.id.image);
-        listView = findViewById(R.id.listview);
-        userName = getIntent().getStringExtra("name");
+        number = getView().findViewById(R.id.num);
+        name = getView().findViewById(R.id.name);
+        image = getView().findViewById(R.id.image);
+        listView = getView().findViewById(R.id.listview);
+        Bundle bundle = getArguments();
+        userName = bundle.getString("name");
     }
 
     //设置基本信息
     private void getinfo() {
-        Intent intent = getIntent();
-        sname = intent.getStringExtra("name");
-        pass = intent.getStringExtra("pass");
+        Bundle bundle = getArguments();
+        sname = bundle.getString("name");
+        pass = bundle.getString("pass");
         number.setText(userName);
         new link().start();
     }
@@ -239,7 +244,7 @@ public class Student_Info extends AppCompatActivity {
     }
 
     private void showListDialog(String s[]) {
-        AlertDialog.Builder listDialog = new AlertDialog.Builder(Student_Info.this);
+        AlertDialog.Builder listDialog = new AlertDialog.Builder(getContext());
         if (s != null) {
             listDialog.setItems(s, new DialogInterface.OnClickListener() {
                 @Override
