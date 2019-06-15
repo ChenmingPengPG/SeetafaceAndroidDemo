@@ -49,7 +49,7 @@ public class StuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
     String name, pass;
     String S_name;
-    Bitmap bitmap;
+    public Bitmap bitmap;
     FragmentTransaction transaction;
     NavigationView navigationView;
     TextView above,below;
@@ -358,4 +358,7 @@ public class StuActivity extends AppCompatActivity
                 img.setImageBitmap(bitmap);
         }
     };
+    public interface CallbackChangeImg{
+        void setImg();
+    }
 }

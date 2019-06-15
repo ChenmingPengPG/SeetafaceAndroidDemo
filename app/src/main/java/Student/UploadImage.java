@@ -21,6 +21,7 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -48,7 +49,7 @@ import java.net.UnknownHostException;
 
 import seetaface.CMSeetaFace;
 
-public class UploadImage extends Fragment {
+public class UploadImage extends Fragment{
     Button select, upload;
     String picPath = null;
     String Sid;
@@ -187,6 +188,7 @@ public class UploadImage extends Fragment {
         dialog.show();
     }
 
+
     class link extends Thread {
         @SuppressLint("WrongConstant")
         @Override
@@ -234,9 +236,10 @@ public class UploadImage extends Fragment {
                         Log.i("answer", "feature");
                         handler.post(runnable1);
                         Looper.prepare();
-                        Toast.makeText(getContext(), "上传图片成功", Toast.LENGTH_SHORT).show();
+
                         //finish();
                         Looper.loop();
+
                     } else {
                         Looper.prepare();
                         Toast.makeText(getContext(), "上传失败", Toast.LENGTH_SHORT).show();
@@ -285,6 +288,10 @@ public class UploadImage extends Fragment {
         @Override
         public void run() {
             pb.setVisibility(View.INVISIBLE);
+            Toast.makeText(getContext(), "上传图片成功", Toast.LENGTH_SHORT).show();
+            NavigationView nav = (NavigationView)getActivity().findViewById(R.id.nav_view);
+            ImageView img = nav.getHeaderView(0).findViewById(R.id.imageView);
+            img.setImageBitmap(bt);
         }
     };
 }
