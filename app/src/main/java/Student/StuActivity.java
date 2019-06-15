@@ -3,10 +3,13 @@ package Student;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,6 +34,12 @@ import com.example.facedemo.R;
 import com.example.yi.myproject.ExitApplication;
 import com.example.yi.myproject.MyProject;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.net.URL;
+
 import Teacher.CheckinPage;
 import Teacher.Password_change;
 import Teacher.TeaActivity;
@@ -39,7 +48,11 @@ import Teacher.Teacher_Info;
 public class StuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
     String name, pass;
+    String S_name;
+    Bitmap bitmap;
     FragmentTransaction transaction;
+    NavigationView navigationView;
+    TextView above,below;
     Fragment uploadImageFragment, studentInfoFragment, recordFragment, changePassFragment, exitFragment;
     int State=0;
     private SharedPreferences sp;
@@ -65,17 +78,13 @@ public class StuActivity extends AppCompatActivity
                         .setAction("Action", null).show();*/
             }
         });
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View nav_header =  navigationView.getHeaderView(0);
-        ImageView img = nav_header.findViewById(R.id.imageView);
-        Log.i("TeaActivity",img==null?"NULL":"NOT NULL");
-        img.setImageResource(R.drawable.teacher);
-        TextView above = (TextView)nav_header.findViewById(R.id.above);
-        TextView below = (TextView)nav_header.findViewById(R.id.below);
-        above.setText("账号");
+        above = (TextView)nav_header.findViewById(R.id.above);
+        below = (TextView)nav_header.findViewById(R.id.below);
         below.setText(name);
-
+        new link().start();
         drawer.openDrawer(Gravity.START);
 
         //设置全屏
@@ -86,7 +95,7 @@ public class StuActivity extends AppCompatActivity
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
 
-        initialFragmentStudentInfo();
+        initialFragmentRecord();
     }
     public void getNameAndPass(){
         Intent intent = getIntent();
@@ -291,4 +300,62 @@ public class StuActivity extends AppCompatActivity
             startActivity(intent);
         }
     }
+
+    class link extends Thread {
+        @SuppressLint("WrongConstant")
+        @Override
+        public void run() {
+            String url = new basicInfo().getinfoUrl();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("name", name);
+                jsonObject.put("pass", pass);
+                jsonObject.put("type", "1");//"1" 表示已登录状态
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            String data = jsonObject.toString();
+            String info = UserService.posttoServerforResult(url, data);
+            if (info != null) {
+                Log.i("aaa", info);
+                String str[] = info.split(",");
+                for (int i = 0; i < str.length; i++) {
+                    if (i == 1) S_name = str[i];
+                }
+            }
+            //显示名字
+            Log.i("STU_ACTIVIT",S_name);
+            //if (null != S_name)
+            //获取图片
+            new link1().start();
+            handler.post(runnable);
+            super.run();
+        }
+    }
+    class link1 extends Thread {
+        @SuppressLint("WrongConstant")
+        @Override
+        public void run() {
+            String url = new basicInfo().getiamgeurl();
+            InputStream image = UserService.loginOfGetimage(url, name);
+            bitmap = BitmapFactory.decodeStream(image);
+            handler.post(runnable1);
+        }
+    }
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            above.setText(S_name);
+        }
+    };
+    Runnable runnable1 = new Runnable() {
+        @Override
+        public void run() {
+            View nav_header =  navigationView.getHeaderView(0);
+            ImageView img = nav_header.findViewById(R.id.imageView);
+            Log.i("StuActivity",img==null?"NULL":"NOT NULL");
+            if(bitmap != null && img != null)
+                img.setImageBitmap(bitmap);
+        }
+    };
 }
