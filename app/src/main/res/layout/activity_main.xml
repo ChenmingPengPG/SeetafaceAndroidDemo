@@ -14,7 +14,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="0dp"
-        android:background="@drawable/background_main"
+        android:background="@drawable/background"
         android:scaleType="matrix"
         android:visibility="visible" />
 
@@ -69,6 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="老师"
+            android:textColor="@color/white"
             android:fontFamily="@font/test"
             android:layout_weight="1"
             />
@@ -79,6 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/test"
+            android:textColor="@color/white"
             android:text="学生" />
     </RadioGroup>
     <Button
@@ -89,6 +91,7 @@
         android:layout_below="@+id/RadioGroup"
         android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
+        android:backgroundTint="#148F77"
         android:text="登录"
         android:fontFamily="@font/test"/>
 

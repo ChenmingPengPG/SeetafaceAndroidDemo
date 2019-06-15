@@ -6,13 +6,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +31,7 @@ import java.util.List;
 
 ;
 
-public class Student_Info extends Fragment {
+public class StudentInfo extends Fragment {
     View view;
     TextView number, name; //学号和姓名，认为学号即用户名
     ImageView image;
@@ -161,7 +158,7 @@ public class Student_Info extends Fragment {
 
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                LayoutInflater inflater = Student_Info.this.getLayoutInflater();
+                LayoutInflater inflater = StudentInfo.this.getLayoutInflater();
                 View view;
                 if (convertView == null) {
                     view = inflater.inflate(R.layout.student_item, null);

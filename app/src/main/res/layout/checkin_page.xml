@@ -11,11 +11,11 @@
         android:layout_height="fill_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/background_and"
         android:contentDescription="@string/background_mian"
         android:scaleType="matrix"
         android:visibility="visible"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:background="#D6EAF8"/>
 
     <Spinner
         android:id="@+id/chooseClass"

@@ -14,7 +14,7 @@
         android:layout_marginStart="0dp"
         android:layout_marginLeft="0dp"
         android:layout_marginTop="0dp"
-        android:background="@drawable/background_and"
+        android:background="#AED6F1"
         android:contentDescription="@string/background_mian"
         android:scaleType="matrix"
         android:visibility="visible" />

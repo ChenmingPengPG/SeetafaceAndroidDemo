@@ -66,6 +66,7 @@ public class Record extends Fragment {
         Bundle bundle = getArguments();
         Sid = bundle.getString("Sid");
         title = getView().findViewById(R.id.course);
+        getView().setBackgroundColor(0XA9CCE3);
         all = getView().findViewById(R.id.all);
         all.setVisibility(View.INVISIBLE);
     }

@@ -85,7 +85,7 @@ public class TeaActivity extends AppCompatActivity
         img.setImageResource(R.drawable.teacher);
         TextView above = (TextView)nav_header.findViewById(R.id.above);
         TextView below = (TextView)nav_header.findViewById(R.id.below);
-        above.setText("账号");
+        above.setText("教师");
         below.setText(name);
 
         drawer.openDrawer(Gravity.START);
@@ -124,7 +124,7 @@ public class TeaActivity extends AppCompatActivity
                 transaction.commit();
             }else if(msg.what == LookForInfo){
                 if(lookForInfoFragment == null){
-                    lookForInfoFragment = new Teacher_Info();
+                    lookForInfoFragment = new TeacherInfo();
                     transaction.add(R.id.frame_layout, lookForInfoFragment);
                 }
                 hideall();

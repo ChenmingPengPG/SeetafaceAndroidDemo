@@ -22,7 +22,7 @@ import com.example.facedemo.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Password_change extends AppCompatActivity {
+public class PasswordChange extends AppCompatActivity {
     EditText oldpassText, newpassText, confirmpassText;
     Button confirm;
     String oldpass, newpass, confirmpass;
@@ -91,15 +91,15 @@ public class Password_change extends AppCompatActivity {
             public void onClick(View v) {
                 gettext();
                 if (!pass.equals(oldpass)) {
-                    Toast.makeText(Password_change.this, "旧密码错误", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PasswordChange.this, "旧密码错误", Toast.LENGTH_SHORT).show();
                     oldpassText.setError("错误");
                     oldpassText.requestFocus();
                 } else if (("").equals(newpass)) {
-                    Toast.makeText(Password_change.this, "新密码不能为空", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PasswordChange.this, "新密码不能为空", Toast.LENGTH_SHORT).show();
                     newpassText.setError("错误");
                     newpassText.requestFocus();
                 } else if (!newpass.equals(confirmpass)) {
-                    Toast.makeText(Password_change.this, "两次密码不一致", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PasswordChange.this, "两次密码不一致", Toast.LENGTH_SHORT).show();
                 } else {
                     //连接服务器修改密码
                     new link().start();
@@ -137,12 +137,12 @@ public class Password_change extends AppCompatActivity {
             String str = UserService.posttoServerforResult(url,data);
             if (null != str) {
                 Looper.prepare();
-                Toast.makeText(Password_change.this, "修改成功,请重新登录", 1).show();
+                Toast.makeText(PasswordChange.this, "修改成功,请重新登录", 1).show();
                 back_main();
                 Looper.loop();
             } else {
                 Looper.prepare();
-                Toast.makeText(Password_change.this, "服务器连接失败", 1).show();
+                Toast.makeText(PasswordChange.this, "服务器连接失败", 1).show();
                 Looper.loop();
             }
 

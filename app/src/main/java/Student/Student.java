@@ -100,14 +100,14 @@ public class Student extends AppCompatActivity {
     }
 
     private void stu_info(){
-        Intent intent=new Intent(this, Student_Info.class);
+        Intent intent=new Intent(this, StudentInfo.class);
         intent.putExtra("name", name);
         intent.putExtra("pass", pass);
         startActivity(intent);
     }
 
     private void changepassword(){
-        Intent intent=new Intent(this, Password_change.class);
+        Intent intent=new Intent(this, PasswordChange.class);
         intent.putExtra("name", name);
         intent.putExtra("pass", pass);
         startActivity(intent);

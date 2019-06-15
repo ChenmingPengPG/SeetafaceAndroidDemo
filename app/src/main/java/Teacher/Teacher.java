@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -19,7 +18,6 @@ import com.example.yi.myproject.MyProject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.opencv.core.Mat;
 
 public class Teacher extends AppCompatActivity {
     String name;
@@ -110,7 +108,7 @@ public class Teacher extends AppCompatActivity {
     }
 
     private void lookforinfo() {
-        Intent intent = new Intent(this, Teacher_Info.class);
+        Intent intent = new Intent(this, TeacherInfo.class);
         intent.putExtra("name", name);
         intent.putExtra("pass", pass);
         intent.putExtra("info", info);

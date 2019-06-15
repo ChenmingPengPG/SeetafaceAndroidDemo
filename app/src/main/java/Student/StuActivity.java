@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -42,12 +41,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
-import java.net.URL;
 
-import Teacher.CheckinPage;
 import Teacher.Password_change;
-import Teacher.TeaActivity;
-import Teacher.Teacher_Info;
 
 public class StuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -127,7 +122,7 @@ public class StuActivity extends AppCompatActivity
                 transaction.commit();
             }else if(msg.what == STUDENTINFO){
                 if(studentInfoFragment == null){
-                    studentInfoFragment = new Student_Info();
+                    studentInfoFragment = new StudentInfo();
                     transaction.add(R.id.frame_layout, studentInfoFragment);
                 }
                 hideall();

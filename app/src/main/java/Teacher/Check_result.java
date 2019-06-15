@@ -3,6 +3,8 @@ package Teacher;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.v7.app.AlertDialog;
@@ -73,6 +75,14 @@ public class Check_result extends AppCompatActivity {
         notbenum = findViewById(R.id.re_didntbe);
         percent = findViewById(R.id.re_percent);
         submit = findViewById(R.id.submit);
+
+        //沉浸式layout
+        View decorView = getWindow().getDecorView();
+        int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+        decorView.setSystemUiVisibility(option);
+        if(Build.VERSION.SDK_INT >= 21){
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
     }
 
     private void getData() {

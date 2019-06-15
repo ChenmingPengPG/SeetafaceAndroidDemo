@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Teacher_Info extends Fragment {
+public class TeacherInfo extends Fragment {
     private String T_name;
     private TextView realname;
     private TextView username;//账号

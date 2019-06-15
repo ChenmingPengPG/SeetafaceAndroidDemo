@@ -33,11 +33,11 @@
         </activity>
 
         <activity android:name="Student.Student" />
-        <activity android:name="Student.Student_Info" />
-        <activity android:name="Student.Password_change" />
+        <activity android:name="Student.StudentInfo" />
+        <activity android:name="Student.PasswordChange" />
         <activity android:name="Teacher.Teacher" />
         <activity android:name="Teacher.CheckinPage" />
-        <activity android:name="Teacher.Teacher_Info" />
+        <activity android:name="Teacher.TeacherInfo" />
         <activity android:name="Teacher.Password_change" />
         <activity android:name="Teacher.Check_result" />
         <activity android:name="Student.UploadImage" />
