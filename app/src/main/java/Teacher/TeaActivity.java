@@ -1,6 +1,7 @@
 package Teacher;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -15,16 +16,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.MailSender;
 import com.example.facedemo.R;
 import com.example.yi.myproject.MyProject;
 
@@ -163,7 +167,20 @@ public class TeaActivity extends AppCompatActivity
     private void initialFragmentChangePass(){
         handler.sendEmptyMessage(ChangePass);
     }
-
+    public void alert_edit(View view){
+        final EditText et = new EditText(this);
+        new AlertDialog.Builder(this).setTitle("请输入给工作人员的邮件信息")
+                .setIcon(R.drawable.ic_email_black_24dp)
+                .setView(et)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //按下确定键后的事件
+                        Log.i("mail info", et.getText().toString());
+                        new MailSender(et.getText().toString()).start();
+                    }
+                }).setNegativeButton("取消",null).show();
+    }
     private void hideall(){
         if(checkInFragment != null){
             transaction.hide(checkInFragment);
@@ -237,15 +254,20 @@ public class TeaActivity extends AppCompatActivity
             saveInfo(State);
             startActivity(intent);
         } else if (id == R.id.nav_share) {
+            Intent textIntent = new Intent(Intent.ACTION_SEND);
+            textIntent.setType("text/plain");
+            textIntent.putExtra(Intent.EXTRA_TEXT, "这是一个无感知人脸识别签到系统，欢迎提出建议！");
+            startActivity(Intent.createChooser(textIntent, "分享"));
 
         } else if (id == R.id.nav_send) {
-
+            alert_edit(getWindow().getDecorView());
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 
 
     class link extends Thread {
