@@ -70,6 +70,7 @@
             android:layout_height="wrap_content"
             android:text="老师"
             android:textColor="@color/white"
+            android:buttonTint="@color/white"
             android:fontFamily="@font/test"
             android:layout_weight="1"
             />
@@ -81,6 +82,7 @@
             android:layout_weight="1"
             android:fontFamily="@font/test"
             android:textColor="@color/white"
+            android:buttonTint="@color/white"
             android:text="学生" />
     </RadioGroup>
     <Button

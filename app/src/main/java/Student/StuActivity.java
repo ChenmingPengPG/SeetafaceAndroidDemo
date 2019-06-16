@@ -42,7 +42,6 @@ import org.json.JSONObject;
 
 import java.io.InputStream;
 
-import Teacher.Password_change;
 
 public class StuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -149,7 +148,7 @@ public class StuActivity extends AppCompatActivity
                 transaction.commit();
             }else if(msg.what == CHANGEPASS){
                 if(changePassFragment == null){
-                    changePassFragment = new Password_change();
+                    changePassFragment = new PasswordChange();
                     transaction.add(R.id.frame_layout, changePassFragment);
                 }
                 hideall();
@@ -221,6 +220,7 @@ public class StuActivity extends AppCompatActivity
         sp = getSharedPreferences("data", MODE_PRIVATE);//data为保存的SharedPreferences文件名
         editor = sp.edit();
         editor.putInt("State", state);
+        editor.putString("role","student");
         editor.apply();
     }
 

@@ -8,6 +8,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -180,6 +181,14 @@ public class MyProject extends AppCompatActivity {
             PasswordText.setText(sp.getString("password", ""));
             name = NameText.getText().toString();
             pass = PasswordText.getText().toString();
+            String role = sp.getString("role", "student");
+            if(role.equals("teacher")){
+                radioGroup.check(R.id.Teacher);
+                T_S = 1;
+            }else if(role.equals("student")){
+                radioGroup.check(R.id.Student);
+                T_S = 2;
+            }
             //登录状态为1时，直接进入下一个页面
             if ((sp.getInt("State", 0)) == 1) {
                 if(name.contains("T"))
@@ -187,6 +196,7 @@ public class MyProject extends AppCompatActivity {
                 else if(name.contains("S"))
                     new link1().start();
             }
+
         }
     }
 
@@ -379,7 +389,8 @@ public class MyProject extends AppCompatActivity {
         editor.putString("password", et_password);
         State = 1;
         editor.putInt("State", State);
-        editor.commit();
+        editor.putString("role", T_S == 1 ? "teacher" : "student");
+        editor.apply();
     }
 
     //退出时的时间

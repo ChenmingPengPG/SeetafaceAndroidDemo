@@ -200,7 +200,8 @@ public class TeaActivity extends AppCompatActivity
         sp = getSharedPreferences("data", MODE_PRIVATE);//data为保存的SharedPreferences文件名
         editor = sp.edit();
         editor.putInt("State", state);
-        editor.commit();
+        editor.putString("role","teacher");
+        editor.apply();
     }
 
     @Override

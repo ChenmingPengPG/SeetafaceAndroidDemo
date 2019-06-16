@@ -174,7 +174,8 @@ public class Password_change extends Fragment {
         editor = sp.edit();
         editor.putInt("State", state);
         editor.putString("password", "");
-        editor.commit();
+        editor.putString("role","teacher");
+        editor.apply();
     }
 
 
