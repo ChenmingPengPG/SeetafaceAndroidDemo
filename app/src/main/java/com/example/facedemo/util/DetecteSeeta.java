@@ -27,12 +27,12 @@ public class DetecteSeeta {
     SeetaFace jni;
     Bitmap mFaceBmp1, mFaceBmp2;//小脸
 
-    String mFaceModelDir =  "Model" + File.separator;//人脸正面检测模型
+    String mFaceModelDir =  MyConfig.modelPath;//人脸正面检测模型
     String appPath;
 
     public DetecteSeeta(File path){
         appPath = path.getAbsolutePath();
-        mFaceModelDir = appPath + mFaceModelDir;
+        mFaceModelDir = appPath + mFaceModelDir + File.separator;
     }
 
     /***
@@ -131,7 +131,9 @@ public class DetecteSeeta {
     public CMSeetaFace[] DetectionFace(Bitmap tmp1) {
         jni = new SeetaFace();//实例化检测对象
         if (jni != null) {
+            Log.i("loading","start-----");
             jni.init(mFaceModelDir);
+            Log.i("loading","end-----");
         } else {
             Log.d(TAG, "图片无法加载");
         }
