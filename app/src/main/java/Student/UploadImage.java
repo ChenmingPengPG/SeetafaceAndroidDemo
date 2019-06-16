@@ -198,7 +198,7 @@ public class UploadImage extends Fragment{
                 Toast.makeText(getContext(), "请选择图片", Toast.LENGTH_SHORT).show();
                 Looper.loop();
             } else if (Sid != null && picPath != null) {
-                DetecteSeeta mDetecteSeeta = new DetecteSeeta();
+                DetecteSeeta mDetecteSeeta = new DetecteSeeta(getContext().getExternalFilesDir(null));
                 CMSeetaFace face[] =  mDetecteSeeta.DetectionFace(bt);
                 if (face == null) {
                     Looper.prepare();

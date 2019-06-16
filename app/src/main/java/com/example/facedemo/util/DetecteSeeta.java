@@ -27,7 +27,13 @@ public class DetecteSeeta {
     SeetaFace jni;
     Bitmap mFaceBmp1, mFaceBmp2;//小脸
 
-    String mFaceModelDir = MyConfig.ROOT_CACHE + File.separator + "Model" + File.separator;//人脸正面检测模型
+    String mFaceModelDir =  "Model" + File.separator;//人脸正面检测模型
+    String appPath;
+
+    public DetecteSeeta(File path){
+        appPath = path.getAbsolutePath();
+        mFaceModelDir = appPath + mFaceModelDir;
+    }
 
     /***
      * 得到两张人脸的相似度
@@ -46,8 +52,8 @@ public class DetecteSeeta {
         jni.init(mFaceModelDir);
         mFaceBmp1 = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
         mFaceBmp2 = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
-        mOriginBmp1 = XUtils.getScaledBitmap(FileUtil.saveTmpBitmap(face1, "mOriginBmp1"), 600);
-        mOriginBmp2 = XUtils.getScaledBitmap(FileUtil.saveTmpBitmap(face2, "mOriginBmp2"), 600);
+        mOriginBmp1 = XUtils.getScaledBitmap(FileUtil.saveTmpBitmap(face1, "mOriginBmp1", appPath), 600);
+        mOriginBmp2 = XUtils.getScaledBitmap(FileUtil.saveTmpBitmap(face2, "mOriginBmp2", appPath), 600);
         if (null == mOriginBmp1 || null == mOriginBmp2) {
             Log.d(TAG, "图片无法加载");
             return 0.0f;
@@ -93,7 +99,7 @@ public class DetecteSeeta {
             Log.d(TAG, "图片无法加载");
         }
         mFaceBmp1 = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
-        mOriginBmp1 = XUtils.getScaledBitmap(FileUtil.saveTmpBitmap(tmp1, "mOriginBmp1"), 600);
+        mOriginBmp1 = XUtils.getScaledBitmap(FileUtil.saveTmpBitmap(tmp1, "mOriginBmp1",appPath), 600);
         if (null == mOriginBmp1) {
             Log.d(TAG, "图片无法加载");
             return null;
@@ -130,7 +136,7 @@ public class DetecteSeeta {
             Log.d(TAG, "图片无法加载");
         }
         mFaceBmp1 = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
-        mOriginBmp1 = XUtils.getScaledBitmap(FileUtil.saveTmpBitmap(tmp1, "mOriginBmp1"), 600);
+        mOriginBmp1 = XUtils.getScaledBitmap(FileUtil.saveTmpBitmap(tmp1, "mOriginBmp1",appPath), 600);
         if (null == mOriginBmp1) {
             Log.d(TAG, "图片无法加载");
             return null;
@@ -188,7 +194,7 @@ public class DetecteSeeta {
         jni = new SeetaFace();//实例化检测对象
         jni.init(mFaceModelDir);
         mFaceBmp1 = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
-        mOriginBmp1 = XUtils.getScaledBitmap(FileUtil.saveTmpBitmap(tmp1, "mOriginBmp1"), 600);
+        mOriginBmp1 = XUtils.getScaledBitmap(FileUtil.saveTmpBitmap(tmp1, "mOriginBmp1",appPath), 600);
         if (null == mOriginBmp1) {
             Log.d(TAG, "图片无法加载");
             return null;

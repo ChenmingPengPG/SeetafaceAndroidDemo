@@ -87,6 +87,7 @@ public class MyProject extends AppCompatActivity {
                 runApp();
             }
         }
+
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -101,12 +102,16 @@ public class MyProject extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
     private void runApp() {
-        FileUtil.createDir(MyConfig.FACE_LIBRARY);
-        FileUtil.createDir(MyConfig.ROOT_CACHE+ File.separator+MyConfig.FACE_DIR);
-        FileUtil.createDir(MyConfig.FACE_CACHE);
+        File path = getExternalFilesDir(null);
+        String curPath = path.getAbsolutePath();
+        FileUtil.createDir(curPath+MyConfig.FACE_LIBRARY);
+        FileUtil.createDir(curPath+ File.separator+MyConfig.FACE_DIR);
+        FileUtil.createDir(curPath+MyConfig.FACE_CACHE);
 
         /* 显示ProgressDialog */
-        if (new File(MyConfig.model1).exists()&&new File(MyConfig.model2).exists()&&new File(MyConfig.model3).exists()){
+        if (new File(curPath+MyConfig.model1).exists()&&
+                new File(curPath+MyConfig.model2).exists()&&
+                new File(curPath+MyConfig.model3).exists()){
             //startToMain();
             return;
         }
@@ -115,7 +120,7 @@ public class MyProject extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                AssetsToSd.getInstance(MyProject.this).copyAssetsToSD("Model",MyConfig.modelPath).setFileOperateCallback(new AssetsToSd.FileOperateCallback() {
+                AssetsToSd.getInstance(MyProject.this).copyAssetsToSD("model",curPath+MyConfig.modelPath).setFileOperateCallback(new AssetsToSd.FileOperateCallback() {
                     @Override
                     public void onSuccess() {
                         // TODO: 文件复制成功时，主线程回调

@@ -257,7 +257,7 @@ public class CheckinPage extends Fragment implements AdapterView.OnItemSelectedL
                     Toast.makeText(getContext(), "您未选择课程", Toast.LENGTH_SHORT).show();
                 } else if (bitmap != null) {
                     pb.setVisibility(View.VISIBLE);
-                    mDetecteSeeta = new DetecteSeeta();
+                    mDetecteSeeta = new DetecteSeeta(getContext().getExternalFilesDir(null));
                     //检测出每张图片中的人脸，并放在allface中
                     for(int i=0;i<allbitmap.size();i++){
                         bitmap=allbitmap.get(i);
