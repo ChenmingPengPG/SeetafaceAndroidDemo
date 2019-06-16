@@ -1,10 +1,12 @@
 package com.example.facedemo.util;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -59,6 +61,7 @@ public class AssetsToSd {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                Log.i("copy", srcPath+"\n"+sdPath);
                 copyAssetsToDst(context, srcPath, sdPath);
                 if (isSuccess)
                     handler.obtainMessage(SUCCESS).sendToTarget();
@@ -76,6 +79,11 @@ public class AssetsToSd {
     private void copyAssetsToDst(Context context, String srcPath, String dstPath) {
         try {
             String fileNames[] = context.getAssets().list(srcPath);
+            System.out.println(fileNames.length);
+            for(String filename:fileNames){
+                Log.i("copyAssetsToDst", filename);
+            }
+
             if (fileNames.length > 0) {
                 File file = new File(Environment.getExternalStorageDirectory(), dstPath);
                 if (!file.exists()) file.mkdirs();

@@ -35,9 +35,9 @@ public class FileUtil {
      * 保存目录在
      * @param b
      */
-    public static String saveTmpBitmap(Bitmap b,String name){
+    public static String saveTmpBitmap(Bitmap b,String name, String appPath){
         String result= "";
-        String jpegName = MyConfig.ROOT_CACHE+File.separator+MyConfig.FACE_DIR +File.separator+name +".jpg";
+        String jpegName = appPath+File.separator+MyConfig.FACE_DIR +File.separator+name +".jpg";
         Log.d("FileUtil",jpegName);
         result = jpegName;
         try {
