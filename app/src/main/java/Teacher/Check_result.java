@@ -43,6 +43,7 @@ public class Check_result extends AppCompatActivity {
     String nocome;
 
     int total, real, nonum;
+    boolean committed = false;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -200,7 +201,11 @@ public class Check_result extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //...To-do
-                        new link().start();
+                        if(!committed)
+                            new link().start();
+                        else
+                            Toast.makeText(Check_result.this, "已经提交过了！", Toast.LENGTH_SHORT).show();
+
 
                     }
                 });
@@ -226,7 +231,8 @@ public class Check_result extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //...To-do
-                        back_teacher();
+
+                        //back_teacher();
                     }
                 });
         normalDialog.setNegativeButton("取消",
@@ -263,8 +269,9 @@ public class Check_result extends AppCompatActivity {
             if (null != str) {
                 Looper.prepare();
                 Toast.makeText(Check_result.this, "提交成功", 1).show();
+                committed = true;
                 //返回老师的主页面
-                back_teacher();
+                //back_teacher();
                 Looper.loop();
             } else {
                 Looper.prepare();
@@ -277,13 +284,17 @@ public class Check_result extends AppCompatActivity {
     }
 
     private void back_teacher() {
-        Intent intent = new Intent(this, MyProject.class);
+        Intent intent = new Intent(this, TeaActivity.class);
         startActivity(intent);
     }
 
     @Override
     public void onBackPressed() {
-        showdialog1();
+        if(!committed){
+            showdialog1();
+        }else{
+            super.onBackPressed();
+        }
     }
 }
 
