@@ -79,13 +79,12 @@ public class AssetsToSd {
     private void copyAssetsToDst(Context context, String srcPath, String dstPath) {
         try {
             String fileNames[] = context.getAssets().list(srcPath);
-            System.out.println(fileNames.length);
             for(String filename:fileNames){
                 Log.i("copyAssetsToDst", filename);
             }
-
             if (fileNames.length > 0) {
-                File file = new File(Environment.getExternalStorageDirectory(), dstPath);
+                File file = new File(context.getExternalFilesDir(null), "Model");
+                Log.i("path------------", file.getAbsolutePath());
                 if (!file.exists()) file.mkdirs();
                 for (String fileName : fileNames) {
                     if (!srcPath.equals("")) { // assets 文件夹下的目录
@@ -95,7 +94,7 @@ public class AssetsToSd {
                     }
                 }
             } else {
-                File outFile = new File(Environment.getExternalStorageDirectory(), dstPath);
+                File outFile = new File(dstPath);
                 InputStream is = context.getAssets().open(srcPath);
                 FileOutputStream fos = new FileOutputStream(outFile);
                 byte[] buffer = new byte[1024];
