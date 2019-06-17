@@ -48,6 +48,7 @@ import org.opencv.android.OpenCVLoader;
 import java.io.File;
 import java.util.ArrayList;
 
+import Student.BitmapUtil;
 import seetaface.CMSeetaFace;
 import seetaface.SeetaFace;
 
@@ -64,6 +65,7 @@ public class CheckinPage extends Fragment implements AdapterView.OnItemSelectedL
     Bitmap bitmap, bitresult, bitget;
     Button getresult;
     ImageView image;
+    ImageView vector;
     String picPath;
     String mImagePath, mImageName;
     String[] arr;
@@ -206,6 +208,8 @@ public class CheckinPage extends Fragment implements AdapterView.OnItemSelectedL
         start = getView().findViewById(R.id.startCheckIn);
         chooseimg = getView().findViewById(R.id.choosePicture);
         image = getView().findViewById(R.id.imageView);
+        vector = getView().findViewById(R.id.vector);
+        vector.setVisibility(View.GONE);
         sp = getView().findViewById(R.id.chooseClass);
         pb = getView().findViewById(R.id.progressBar);
         sp.setAdapter(myAdapter);
@@ -220,11 +224,13 @@ public class CheckinPage extends Fragment implements AdapterView.OnItemSelectedL
     }
 
     private void setButton() {
-        //给image设置监听，切换已选择的图片
+        //给image设置监听，旋转
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setimage();
+                bitmap = BitmapUtil.rotateBitmap(bitmap,90);
+                image.setImageBitmap(bitmap);
+                allbitmap.set(imagenum, bitmap);
             }
         });
         //给image设置长按监听，删除图片
@@ -234,6 +240,13 @@ public class CheckinPage extends Fragment implements AdapterView.OnItemSelectedL
                 showListlongClickDialog();
                 Log.i("longclick","longclick");
                 return true;
+            }
+        });
+        //vector箭头， 切换
+        vector.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setimage();
             }
         });
         getresult.setOnClickListener(new View.OnClickListener() {
@@ -400,6 +413,9 @@ public class CheckinPage extends Fragment implements AdapterView.OnItemSelectedL
                             imagenum++;
                             image.setImageBitmap(bitmap);
                             chooseimg.setText("继续添加图片");
+                            if(allbitmap.size() > 1){
+                                vector.setVisibility(View.VISIBLE);
+                            }
                             image.setVisibility(View.VISIBLE);
                         } else {
                             alert();
@@ -556,6 +572,9 @@ public class CheckinPage extends Fragment implements AdapterView.OnItemSelectedL
                             imagenum=-1;
                             bitmap=null;
                             image.setVisibility(View.INVISIBLE);
+
+                        }else if(allbitmap.size() == 1){
+                            vector.setVisibility(View.GONE);
                         }
                         else if(imagenum!=0){
                             imagenum--;

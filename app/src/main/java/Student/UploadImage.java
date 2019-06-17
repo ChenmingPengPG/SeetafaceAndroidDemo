@@ -13,6 +13,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -116,7 +118,7 @@ public class UploadImage extends Fragment{
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectimage();
+                rotateimage(image);
             }
         });
         select.setOnClickListener(new View.OnClickListener() {
@@ -140,6 +142,11 @@ public class UploadImage extends Fragment{
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_PICK);
         startActivityForResult(intent, 1);
+    }
+    private void rotateimage(ImageView image){
+        //支点在图片中心
+        bt = BitmapUtil.rotateBitmap(bt, 90);
+        image.setImageBitmap(bt);
     }
 
     @Override

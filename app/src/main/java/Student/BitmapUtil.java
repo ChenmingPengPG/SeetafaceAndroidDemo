@@ -69,6 +69,21 @@ public class BitmapUtil {
         return bitmap;
 
     }
+    public static Bitmap rotateBitmap(Bitmap bm, final int orientationDegree) {
+
+        Matrix m = new Matrix();
+        m.setRotate(orientationDegree, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
+
+        try {
+            Bitmap bm1 = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), m, true);
+
+            return bm1;
+
+        } catch (OutOfMemoryError ex) {
+        }
+        return null;
+
+    }
 
     //转换为圆形状的bitmap
     public static Bitmap createCircleImage(Bitmap source) {
